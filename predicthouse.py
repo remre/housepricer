@@ -14,67 +14,99 @@ dtype: int64
 # window= Tk()
 
 import tkinter as tk
-from tkinter import MULTIPLE, SINGLE, Listbox, ttk
+from tkinter import MULTIPLE, SINGLE,  ttk, Label, Entry, Listbox, Scrollbar
+from tkinter.messagebox import YES
 from tokenize import Single
 
 
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
+        # self.root = Tk()
         self.title('Tkinter StringVar')
-        self.geometry("300x80")
+        self.geometry("600x200")
 
         self.name_var = tk.StringVar()
 
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
         self.columnconfigure(2, weight=1)
+        self.columnconfigure(3, weight=1)
+        self.columnconfigure(4, weight=1)
+        self.columnconfigure(5, weight=1)
+        self.columnconfigure(6, weight=1)
+        self.columnconfigure(7, weight=1)
+        self.columnconfigure(8, weight=1)
+        self.columnconfigure(9, weight=1)
+
 
         self.create_widgets()
 
     def create_widgets(self):
 
-        padding = {'padx': 5, 'pady': 5}
+        padding = {'padx': 1, 'pady': 1}
         # label
-        ttk.Label(self, text='Name:').grid(column=0, row=0, **padding)
+        floor = Label(self, text='Floor').grid(column=0, row=0, **padding)
 
         # Entry
-        name_entry = ttk.Entry(self, textvariable=self.name_var)
-        name_entry.grid(column=1, row=0, **padding)
-        name_entry.focus()
+        floornumber = range(-2,50)
+        floor_number = Listbox(self,width=5,height=5,selectmode=SINGLE)
+        sb1=Scrollbar(self)
+        sb1.grid(column=1,row=1)
+
+        
+        for i in floornumber:
+
+            floor_number.insert(i,'{}'.format(i))
+
+        floor_number.configure(yscrollcommand=sb1.set)
+        sb1.configure(command=floor_number.yview)
+        floor_number.grid(column=0, row=1, **padding)
+        floor_number.focus()
+
         # List of HOuse
-        bedroom_number = Listbox(self, width=40, height=10, selectmode=SINGLE)
+        titlebed = Label(self,text="Number of bedrooms")
+        bedroom_number = Listbox(self, width=5,height=5, selectmode=SINGLE,yscrollcommand='YES')
+
         bedroom_number.insert(1,'1')
         bedroom_number.insert(2,'2')
         bedroom_number.insert(3,'3')
         bedroom_number.insert(4,'4')
         bedroom_number.insert(5,'5')
 
+        # sb2=Scrollbar(self)
+        # sb2.grid(column=4,row=1)
+        # bedroom_number.configure(yscrollcommand=sb2.set)
+        # sb2.configure(command=bedroom_number.yview)
+        
+        titlebed.grid(column=3,row=0,**padding)
+        bedroom_number.grid(column=3,row=1,**padding)
+
         
         # Button
         submit_button = ttk.Button(self, text='Submit', command=self.submit)
-        submit_button.grid(column=2, row=0, **padding)
+        submit_button.grid(column=5, row=1, **padding)
 
         # Output label
         self.output_label = ttk.Label(self)
-        self.output_label.grid(column=0, row=1, columnspan=3, **padding)
+        self.output_label.grid(column=5, row=1, columnspan=3, **padding)
 
-    def selected_item():
+#     def selected_item():
      
-    # Traverse the tuple returned by
-    # curselection method and print
-    # corresponding value(s) in the listbox
-        for i in listbox.curselection():
-            print(listbox.get(i))
+#     # Traverse the tuple returned by
+#     # curselection method and print
+#     # corresponding value(s) in the listbox
+#         for i in listbox.curselection():
+#             print(listbox.get(i))
  
-# Create a button widget and
-# map the command parameter to
-# selected_item function
-btn = Button(self, text='Print Selected', command=selected_item)
+# # Create a button widget and
+# # map the command parameter to
+# # selected_item function
+# btn = Button(self, text='Print Selected', command=selected_item)
  
-# Placing the button and listbox
-btn.pack(side='bottom')
-listbox.pack()
+# # Placing the button and listbox
+# btn.pack(side='bottom')
+# listbox.pack()
 
 
     def submit(self):
