@@ -76,8 +76,8 @@ class App(tk.Tk):
         # self.floor_number.configure(yscrollcommand=sb1.set)
         # sb1.configure(command=self.floor_number.yview)
         self.floor_number.grid(column=0, row=1, **padding)
-        self.floor_number.current()
-        self.floor_number.focus()
+        self.floor_number.current(0)
+        # self.floor_number.focus()
 
         # List of HOuse
         titlebed = Label(self,text="Number of bedrooms")
@@ -96,7 +96,7 @@ class App(tk.Tk):
         
         titlebed.grid(column=3,row=0,**padding)
         self.bedroom_number.grid(column=3,row=1,**padding)
-
+        self.bedroom_number.current(0)
 
         # Area Type
         areatypetitle = Label(self,text='Area Type')
@@ -109,7 +109,7 @@ class App(tk.Tk):
 
         areatypetitle.grid(column=4,row=0,**padding)
         self.areatypes.grid(column=4,row=1,**padding)
-
+        self.areatypes.current(0)
 
         # City
         citytitle = Label(self,text='City')
@@ -122,6 +122,7 @@ class App(tk.Tk):
 
         citytitle.grid(column=5,row=0,**padding)
         self.city.grid(column=5,row=1,**padding)
+        self.city.current(0)
 
          # Furnishing Status
         furnishtitle = Label(self,text='Furnishing Status')
@@ -134,7 +135,7 @@ class App(tk.Tk):
 
         furnishtitle.grid(column=6,row=0,**padding)
         self.furnishes.grid(column=6,row=1,**padding)
-
+        self.furnishes.current(0)
          # Tenant Pref
         Tenanttitle = Label(self,text='Tenant Preferred')
         # preftenant = Listbox(self, width=15,height=5,selectmode=SINGLE,exportselection=0)
@@ -146,7 +147,7 @@ class App(tk.Tk):
 
         Tenanttitle.grid(column=7,row=0,**padding)
         self.preftenat.grid(column=7,row=1,**padding)
-
+        self.preftenat.current(0)
 
          # Number of Bathroom
         bathroomtitle = Label(self,text='Number of Bathroom')
@@ -159,7 +160,7 @@ class App(tk.Tk):
 
         bathroomtitle.grid(column=8,row=0,**padding)
         self.bathroom.grid(column=8,row=1,**padding)
-
+        self.bathroom.current(0)
 
 
 
@@ -175,15 +176,28 @@ class App(tk.Tk):
         submit_button.grid(column=9, row=1, **padding)
 
         # Output label
-        self.output_label = ttk.Label(self)
-        self.output_label.grid(column=10, row=1, columnspan=3, **padding)
+        rent = 500
+        self.output_label = ttk.Label(self,text='Select features above and see the predicted rent that you gonna pay!!')
+        self.output_label.grid(column=0, row=9, columnspan=15,rowspan=5, **padding)
 
 
 
     def submit(self):
         # for i in self.floor_number.curselection():
-               
-            self.output_label.config(text=self.floor_number.get())
+            answer_set = {
+                            'Tenant Preferred': self.preftenat.get(),
+                            'Number of Bedrooms': self.bedroom_number.get(),
+                            'Floor': self.floor_number.get(),
+                            'Area Type': self.areatypes.get(),
+                            'City': self.city.get(),
+                            'Furnishes': self.furnishes.get(),
+                            'Bathrooms':self.bathroom.get()
+            }
+
+            # for i in answer_set:
+            # self.output_label.config(text=answer_set.values())
+            rent = 500
+            self.output_label.config(text=f'You choose these features {answer_set.values()}and the Rent is \n {rent}')
 
 
 if __name__ == "__main__":
