@@ -17,6 +17,7 @@ import tkinter as tk
 from tkinter import MULTIPLE, SINGLE,  ttk, Label, Entry, Listbox, Scrollbar
 from tkinter.messagebox import YES
 from tokenize import Single
+from linearregressionhouse import df2
 
 
 class App(tk.Tk):
@@ -28,16 +29,16 @@ class App(tk.Tk):
 
         self.name_var = tk.StringVar()
 
-        self.columnconfigure(0, weight=1)
-        self.columnconfigure(1, weight=1)
-        self.columnconfigure(2, weight=1)
-        self.columnconfigure(3, weight=1)
-        self.columnconfigure(4, weight=1)
-        self.columnconfigure(5, weight=1)
-        self.columnconfigure(6, weight=1)
-        self.columnconfigure(7, weight=1)
-        self.columnconfigure(8, weight=1)
-        self.columnconfigure(9, weight=1)
+        # self.columnconfigure(0, weight=1)
+        # self.columnconfigure(1, weight=1)
+        # self.columnconfigure(2, weight=1)
+        # self.columnconfigure(3, weight=1)
+        # self.columnconfigure(4, weight=1)
+        # self.columnconfigure(5, weight=1)
+        # self.columnconfigure(6, weight=1)
+        # self.columnconfigure(7, weight=1)
+        # self.columnconfigure(8, weight=1)
+        # self.columnconfigure(9, weight=1)
 
 
         self.create_widgets()
@@ -48,16 +49,16 @@ class App(tk.Tk):
         # label
         floor = Label(self, text='Floor').grid(column=0, row=0, **padding)
 
-        # Entry
-        floornumber = range(-2,50)
+        # Floor number
+        floornumber = df2['floor level'].unique()
         floor_number = Listbox(self,width=5,height=5,selectmode=SINGLE)
         sb1=Scrollbar(self)
         sb1.grid(column=1,row=1)
 
         
-        for i in floornumber:
+        for i in range(len(floornumber)):
 
-            floor_number.insert(i,'{}'.format(i))
+            floor_number.insert(i,f'{floornumber[i]}')
 
         floor_number.configure(yscrollcommand=sb1.set)
         sb1.configure(command=floor_number.yview)
@@ -67,12 +68,11 @@ class App(tk.Tk):
         # List of HOuse
         titlebed = Label(self,text="Number of bedrooms")
         bedroom_number = Listbox(self, width=5,height=5, selectmode=SINGLE,yscrollcommand='YES')
+        bedroomnumber  = df2['BHK'].unique()
+        for i in range(len(bedroomnumber)):
 
-        bedroom_number.insert(1,'1')
-        bedroom_number.insert(2,'2')
-        bedroom_number.insert(3,'3')
-        bedroom_number.insert(4,'4')
-        bedroom_number.insert(5,'5')
+            bedroom_number.insert(i,f'{bedroomnumber[i]}')
+        
 
         # sb2=Scrollbar(self)
         # sb2.grid(column=4,row=1)
@@ -82,14 +82,86 @@ class App(tk.Tk):
         titlebed.grid(column=3,row=0,**padding)
         bedroom_number.grid(column=3,row=1,**padding)
 
+
+        # Area Type
+        areatypetitle = Label(self,text='Area Type')
+        areatypes = Listbox(self, width=10,height=5,selectmode=SINGLE)
+        area_types  = df2['Area Type'].unique()
+
+        # area_types = ["Super Area", "Built Area", "Carpet Area"]
+        for i in range(len(area_types)):
+            areatypes.insert(i,f'{area_types[i]}')
+
+        areatypetitle.grid(column=4,row=0,**padding)
+        areatypes.grid(column=4,row=1,**padding)
+
+
+        # City
+        citytitle = Label(self,text='City')
+        city = Listbox(self, width=10,height=5,selectmode=SINGLE)
+        city_names  = df2['City'].unique()
+
+        
+        for i in range(len(city_names)):
+            city.insert(i,f'{city_names[i]}')
+
+        citytitle.grid(column=5,row=0,**padding)
+        city.grid(column=5,row=1,**padding)
+
+         # Furnishing Status
+        furnishtitle = Label(self,text='Furnishing Status')
+        furnishes = Listbox(self, width=10,height=5,selectmode=SINGLE)
+        furnish_status  = df2['Furnishing Status'].unique()
+
+        
+        for i in range(len(furnish_status)):
+            furnishes.insert(i,f'{furnish_status[i]}')
+
+        furnishtitle.grid(column=6,row=0,**padding)
+        furnishes.grid(column=6,row=1,**padding)
+
+         # Tenant Pref
+        Tenanttitle = Label(self,text='Tenant Preferred')
+        preftenant = Listbox(self, width=15,height=5,selectmode=SINGLE)
+        pref_tenant  = df2['Tenant Preferred'].unique()
+
+        
+        for i in range(len(pref_tenant)):
+            preftenant.insert(i,f'{pref_tenant[i]}')
+
+        Tenanttitle.grid(column=7,row=0,**padding)
+        preftenant.grid(column=7,row=1,**padding)
+
+
+         # Number of Bathroom
+        bathroomtitle = Label(self,text='Number of Bathroom')
+        bathroom = Listbox(self, width=5,height=5,selectmode=SINGLE)
+        bathroom_number  = df2['Bathroom'].unique()
+
+        
+        for i in range(len(bathroom_number)):
+            bathroom.insert(i,f'{bathroom_number[i]}')
+
+        bathroomtitle.grid(column=8,row=0,**padding)
+        bathroom.grid(column=8,row=1,**padding)
+
+
+
+
+
+
+
+
+
+
         
         # Button
-        submit_button = ttk.Button(self, text='Submit', command=self.submit)
-        submit_button.grid(column=5, row=1, **padding)
+        # submit_button = ttk.Button(self, text='Submit', command=self.submit)
+        # submit_button.grid(column=5, row=1, **padding)
 
         # Output label
         self.output_label = ttk.Label(self)
-        self.output_label.grid(column=5, row=1, columnspan=3, **padding)
+        self.output_label.grid(column=8, row=1, columnspan=3, **padding)
 
 #     def selected_item():
      
@@ -116,73 +188,3 @@ class App(tk.Tk):
 if __name__ == "__main__":
     app = App()
     app.mainloop()
-
-# title_text = StringVar()
-# l1 = Label(window, text="Title")
-# l1.grid(row=0,column=0)
-
-# author_text = StringVar()
-# l2 = Label(window, text="Author")
-# l2.grid(row=0,column=2)
-
-# year_text = StringVar()
-# l3 = Label(window, text="Year")
-# l3.grid(row=1,column=0)
-
-# ISBN_text = StringVar()
-# l4 = Label(window, text="ISBN")
-# l4.grid(row=1,column=2)
-
-
-# # l2 = Label(window, text="Author")
-# # l1.grid(row=1,column=2)
-
-# title_text=StringVar()
-# e1 = Entry(window, textvariable=title_text)
-# e1.grid(row=0,column=1)
-
-# author_text=StringVar()
-# e2 = Entry(window, textvariable=author_text)
-# e2.grid(row=0,column=3)
-
-# year_text=StringVar()
-# e3 = Entry(window, textvariable=year_text)
-# e3.grid(row=1,column=1)
-
-# ISBN_text=StringVar()
-# e4 = Entry(window, textvariable=ISBN_text)
-# e4.grid(row=1,column=3)
-
-# list1=Listbox(window, height=6,width=35)
-# list1.grid(row=2,column=0, rowspan=8,columnspan=1)
-
-# sb1=Scrollbar(window)
-# sb1.grid(row=5,column=2)
-
-# list1.configure(yscrollcommand=sb1.set)
-# sb1.configure(command=list1.yview)
-
-
-# b1=Button(window,text="View all", width=12)
-# b1.grid(row=2,column=3)
-
-# b2=Button(window,text="Search Entry", width=12)
-# b2.grid(row=3,column=3)
-
-# b3=Button(window,text="Add Entry", width=12)
-# b3.grid(row=4,column=3)
-
-# b4=Button(window,text="Update selected", width=12)
-# b4.grid(row=5,column=3)
-
-# b4=Button(window,text="Delete selected", width=12)
-# b4.grid(row=6,column=3)
-
-
-# b5=Button(window,text="Delete selected", width=12)
-# b5.grid(row=7,column=3)
-
-
-
-
-# window.mainloop()
