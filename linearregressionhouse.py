@@ -9,6 +9,17 @@ df2=df.copy()
 df2 = df2.join(df['Floor'].str.split(' out of ', 1, expand=True).rename(columns={0:'floor level', 1:'total floor'}))
 df2['floor level'] = df2.apply(lambda x: 0 if x['floor level'] =='Ground' \
                                else ( -2 if x['floor level'] =='Lower Basement' else -1 if x['floor level'] =='Upper Basement' else (x['floor level']) ) , axis=1)
-print("Status: Changed 'Ground'=0, 'Lower Basement'=-1, Rest = total floor")
+# print("Status: Changed 'Ground'=0, 'Lower Basement'=-1, Rest = total floor")
 df2.drop('Floor',axis=1,inplace=True)
+
+def convertto_int(df,columns):
+    for col in columns:
+        df[col] = df[col].astype('int64')
+        
+    # return df
+    
+tonum_cols = ['floor level'], ['total floor']
+df2.dropna(inplace=True)
+convertto_int(df2,tonum_cols)
+# df2['City'].unique()
 # print(df['City'].unique())

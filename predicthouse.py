@@ -14,9 +14,10 @@ dtype: int64
 # window= Tk()
 
 import tkinter as tk
-from tkinter import MULTIPLE, SINGLE,  ttk, Label, Entry, Listbox, Scrollbar
+from tkinter import EXTENDED, MULTIPLE, SINGLE,  ttk, Label, Entry, Listbox, Scrollbar
 from tkinter.messagebox import YES
 from tokenize import Single
+from turtle import width
 from linearregressionhouse import df2
 
 
@@ -24,10 +25,21 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
         # self.root = Tk()
-        self.title('Tkinter StringVar')
+        self.title('House Price Prediction Tool')
         self.geometry("600x200")
 
         self.name_var = tk.StringVar()
+        # self.floor_number = Listbox(self,width=5,height=5,selectmode=SINGLE,exportselection=0)
+        self.floor_number = ttk.Combobox(self,width=5)
+        self.bedroom_number = ttk.Combobox(self,width=5)
+        self.areatypes = ttk.Combobox(self,width=15)
+        self.city = ttk.Combobox(self,width=10)
+        
+        self.furnishes = ttk.Combobox(self,width=15)
+        self.preftenat = ttk.Combobox(self,width=15)
+        self.bathroom = ttk.Combobox(self,width=5)
+        
+        # floor_number = self.floor_number
 
         # self.columnconfigure(0, weight=1)
         # self.columnconfigure(1, weight=1)
@@ -50,28 +62,31 @@ class App(tk.Tk):
         floor = Label(self, text='Floor').grid(column=0, row=0, **padding)
 
         # Floor number
-        floornumber = df2['floor level'].unique()
-        floor_number = Listbox(self,width=5,height=5,selectmode=SINGLE)
-        sb1=Scrollbar(self)
-        sb1.grid(column=1,row=1)
+        floornumber =  list(sorted(df2['floor level'].unique()))
+        # floor_number = Listbox(self,width=5,height=5,selectmode=SINGLE)
+        # sb1=Scrollbar(self)
+        # sb1.grid(column=1,row=1)
 
         
-        for i in range(len(floornumber)):
+        # for i in range(len(floornumber)):
 
-            floor_number.insert(i,f'{floornumber[i]}')
+        #     self.floor_number.insert(i,f'{floornumber[i]}')
+        self.floor_number['values'] = floornumber
 
-        floor_number.configure(yscrollcommand=sb1.set)
-        sb1.configure(command=floor_number.yview)
-        floor_number.grid(column=0, row=1, **padding)
-        floor_number.focus()
+        # self.floor_number.configure(yscrollcommand=sb1.set)
+        # sb1.configure(command=self.floor_number.yview)
+        self.floor_number.grid(column=0, row=1, **padding)
+        self.floor_number.current()
+        self.floor_number.focus()
 
         # List of HOuse
         titlebed = Label(self,text="Number of bedrooms")
-        bedroom_number = Listbox(self, width=5,height=5, selectmode=SINGLE,yscrollcommand='YES')
-        bedroomnumber  = df2['BHK'].unique()
-        for i in range(len(bedroomnumber)):
+        # bedroom_number = Listbox(self, width=5,height=5, selectmode=SINGLE,exportselection=0)
+        bedroomnumber  =  list(sorted(df2['BHK'].unique()))
+        self.bedroom_number['values'] = bedroomnumber
+        # for i in range(len(bedroomnumber)):
 
-            bedroom_number.insert(i,f'{bedroomnumber[i]}')
+        #     bedroom_number.insert(i,f'{bedroomnumber[i]}')
         
 
         # sb2=Scrollbar(self)
@@ -80,70 +95,70 @@ class App(tk.Tk):
         # sb2.configure(command=bedroom_number.yview)
         
         titlebed.grid(column=3,row=0,**padding)
-        bedroom_number.grid(column=3,row=1,**padding)
+        self.bedroom_number.grid(column=3,row=1,**padding)
 
 
         # Area Type
         areatypetitle = Label(self,text='Area Type')
-        areatypes = Listbox(self, width=10,height=5,selectmode=SINGLE)
-        area_types  = df2['Area Type'].unique()
-
+        # areatypes = Listbox(self, width=10,height=5,selectmode=SINGLE,exportselection=0)
+        area_types  =  list(sorted(df2['Area Type'].unique()))
+        self.areatypes['values'] = area_types
         # area_types = ["Super Area", "Built Area", "Carpet Area"]
-        for i in range(len(area_types)):
-            areatypes.insert(i,f'{area_types[i]}')
+        # for i in range(len(area_types)):
+        #     areatypes.insert(i,f'{area_types[i]}')
 
         areatypetitle.grid(column=4,row=0,**padding)
-        areatypes.grid(column=4,row=1,**padding)
+        self.areatypes.grid(column=4,row=1,**padding)
 
 
         # City
         citytitle = Label(self,text='City')
-        city = Listbox(self, width=10,height=5,selectmode=SINGLE)
-        city_names  = df2['City'].unique()
-
+        # city = Listbox(self, width=10,height=5,selectmode=SINGLE,exportselection=0)
+        city_names  = list(sorted(df2['City'].unique()))
+        self.city['values'] = city_names
         
-        for i in range(len(city_names)):
-            city.insert(i,f'{city_names[i]}')
+        # for i in range(len(city_names)):
+        #     city.insert(i,f'{city_names[i]}')
 
         citytitle.grid(column=5,row=0,**padding)
-        city.grid(column=5,row=1,**padding)
+        self.city.grid(column=5,row=1,**padding)
 
          # Furnishing Status
         furnishtitle = Label(self,text='Furnishing Status')
-        furnishes = Listbox(self, width=10,height=5,selectmode=SINGLE)
-        furnish_status  = df2['Furnishing Status'].unique()
+        # furnishes = Listbox(self, width=10,height=5,selectmode=SINGLE,exportselection=0)
+        self.furnishes['values']  =  list(sorted(df2['Furnishing Status'].unique()))
 
         
-        for i in range(len(furnish_status)):
-            furnishes.insert(i,f'{furnish_status[i]}')
+        # for i in range(len(furnish_status)):
+        #     furnishes.insert(i,f'{furnish_status[i]}')
 
         furnishtitle.grid(column=6,row=0,**padding)
-        furnishes.grid(column=6,row=1,**padding)
+        self.furnishes.grid(column=6,row=1,**padding)
 
          # Tenant Pref
         Tenanttitle = Label(self,text='Tenant Preferred')
-        preftenant = Listbox(self, width=15,height=5,selectmode=SINGLE)
-        pref_tenant  = df2['Tenant Preferred'].unique()
-
+        # preftenant = Listbox(self, width=15,height=5,selectmode=SINGLE,exportselection=0)
+        pref_tenant  = list(sorted(df2['Tenant Preferred'].unique()))
+        self.preftenat['values'] = pref_tenant
         
-        for i in range(len(pref_tenant)):
-            preftenant.insert(i,f'{pref_tenant[i]}')
+        # for i in range(len(pref_tenant)):
+        #     preftenant.insert(i,f'{pref_tenant[i]}')
 
         Tenanttitle.grid(column=7,row=0,**padding)
-        preftenant.grid(column=7,row=1,**padding)
+        self.preftenat.grid(column=7,row=1,**padding)
 
 
          # Number of Bathroom
         bathroomtitle = Label(self,text='Number of Bathroom')
-        bathroom = Listbox(self, width=5,height=5,selectmode=SINGLE)
-        bathroom_number  = df2['Bathroom'].unique()
-
+        # bathroom = Listbox(self, width=5,height=5,selectmode=SINGLE,exportselection=0)
+        bathroom_number  = list(sorted(df2['Bathroom'].unique()))
+        self.bathroom['values'] = bathroom_number
         
-        for i in range(len(bathroom_number)):
-            bathroom.insert(i,f'{bathroom_number[i]}')
+        # for i in range(len(bathroom_number)):
+        #     bathroom.insert(i,f'{bathroom_number[i]}')
 
         bathroomtitle.grid(column=8,row=0,**padding)
-        bathroom.grid(column=8,row=1,**padding)
+        self.bathroom.grid(column=8,row=1,**padding)
 
 
 
@@ -156,33 +171,19 @@ class App(tk.Tk):
 
         
         # Button
-        # submit_button = ttk.Button(self, text='Submit', command=self.submit)
-        # submit_button.grid(column=5, row=1, **padding)
+        submit_button = ttk.Button(self, text='Submit', command=self.submit)
+        submit_button.grid(column=9, row=1, **padding)
 
         # Output label
         self.output_label = ttk.Label(self)
-        self.output_label.grid(column=8, row=1, columnspan=3, **padding)
+        self.output_label.grid(column=10, row=1, columnspan=3, **padding)
 
-#     def selected_item():
-     
-#     # Traverse the tuple returned by
-#     # curselection method and print
-#     # corresponding value(s) in the listbox
-#         for i in listbox.curselection():
-#             print(listbox.get(i))
- 
-# # Create a button widget and
-# # map the command parameter to
-# # selected_item function
-# btn = Button(self, text='Print Selected', command=selected_item)
- 
-# # Placing the button and listbox
-# btn.pack(side='bottom')
-# listbox.pack()
 
 
     def submit(self):
-        self.output_label.config(text=self.name_var.get())
+        # for i in self.floor_number.curselection():
+               
+            self.output_label.config(text=self.floor_number.get())
 
 
 if __name__ == "__main__":
