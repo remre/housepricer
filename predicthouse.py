@@ -13,6 +13,7 @@ dtype: int64
 '''
 # window= Tk()
 
+from datetime import datetime
 import tkinter as tk
 from tkinter import EXTENDED, MULTIPLE, SINGLE,  ttk, Label, Entry, Listbox, Scrollbar
 from tkinter.messagebox import YES
@@ -34,7 +35,7 @@ class App(tk.Tk):
         self.bedroom_number = ttk.Combobox(self,width=5)
         self.areatypes = ttk.Combobox(self,width=15)
         self.city = ttk.Combobox(self,width=10)
-        
+        self.point_o_contact = ttk.Combobox(self,width=10)
         self.furnishes = ttk.Combobox(self,width=15)
         self.preftenat = ttk.Combobox(self,width=15)
         self.bathroom = ttk.Combobox(self,width=5)
@@ -80,7 +81,7 @@ class App(tk.Tk):
         # self.floor_number.focus()
 
         # List of HOuse
-        titlebed = Label(self,text="Number of bedrooms")
+        titlebed = Label(self,text="Bedrooms")
         # bedroom_number = Listbox(self, width=5,height=5, selectmode=SINGLE,exportselection=0)
         bedroomnumber  =  list(sorted(df2['BHK'].unique()))
         self.bedroom_number['values'] = bedroomnumber
@@ -98,14 +99,12 @@ class App(tk.Tk):
         self.bedroom_number.grid(column=3,row=1,**padding)
         self.bedroom_number.current(0)
 
+        
         # Area Type
         areatypetitle = Label(self,text='Area Type')
-        # areatypes = Listbox(self, width=10,height=5,selectmode=SINGLE,exportselection=0)
         area_types  =  list(sorted(df2['Area Type'].unique()))
         self.areatypes['values'] = area_types
-        # area_types = ["Super Area", "Built Area", "Carpet Area"]
-        # for i in range(len(area_types)):
-        #     areatypes.insert(i,f'{area_types[i]}')
+
 
         areatypetitle.grid(column=4,row=0,**padding)
         self.areatypes.grid(column=4,row=1,**padding)
@@ -150,7 +149,7 @@ class App(tk.Tk):
         self.preftenat.current(0)
 
          # Number of Bathroom
-        bathroomtitle = Label(self,text='Number of Bathroom')
+        bathroomtitle = Label(self,text='Bathroom')
         # bathroom = Listbox(self, width=5,height=5,selectmode=SINGLE,exportselection=0)
         bathroom_number  = list(sorted(df2['Bathroom'].unique()))
         self.bathroom['values'] = bathroom_number
@@ -163,7 +162,15 @@ class App(tk.Tk):
         self.bathroom.current(0)
 
 
+        # Point of Contact
+        pointocontacttitle = Label(self,text='Point of Contact')
+        point_o_contact  =  list(sorted(df2['Point of Contact'].unique()))
+        self.point_o_contact['values'] = point_o_contact
 
+
+        pointocontacttitle.grid(column=9,row=0,**padding)
+        self.point_o_contact.grid(column=9,row=1,**padding)
+        self.point_o_contact.current(0)
 
 
 
@@ -194,9 +201,9 @@ class App(tk.Tk):
         # Output label
         rent = 500
         self.output_label = ttk.Label(self,text='Select features above and see the predicted rent that you gonna pay!!')
-        self.output_label.grid(column=0, row=9, columnspan=15,rowspan=5, **padding)
-        submit_button = ttk.Button(self, text='Graph',command=self.submit)
-        submit_button.grid(column=10, row=1, **padding)
+        self.output_label.grid(column=0, row=10, columnspan=15,rowspan=5, **padding)
+        submit_button = ttk.Button(self, text='Submit',command=self.submit)
+        submit_button.grid(column=11, row=1, **padding)
 
 
 
@@ -204,21 +211,25 @@ class App(tk.Tk):
         # for i in self.floor_number.curselection():
         answer_set = {
                         'Tenant Preferred': self.preftenat.get(),
-                        'Number of Bedrooms': self.bedroom_number.get(),
-                        'Floor': self.floor_number.get(),
+                        'BHK': self.bedroom_number.get(),
+                        'floor level': self.floor_number.get(),
                         'Area Type': self.areatypes.get(),
                         'City': self.city.get(),
-                        'Furnishes': self.furnishes.get(),
-                        'Bathrooms':self.bathroom.get()
+                        'Furnishing Status': self.furnishes.get(),
+                        'Bathroom':self.bathroom.get(),
+                        'Size' :round(df2.loc[df2['Bathroom']==round(df2['Bathroom'].mean())]['Size'].mean()),
+                        'total floor' :round(df2['total floor'].mean()),
+                        'year' : datetime.now().year,
+                        'month': datetime.now().month
         }
 
         # for i in answer_set:
         self.output_label.config(text=answer_set.values())
         rent = 500
 
-        self.output_label.config(text=f'You choose these features {answer_set.values()}and the Rent is \n {rent}')
-
-        
+        self.output_label.config(text=f'You choose these features {answer_set.items()} and the Rent is \n {rent}')
+        print(df2.columns)
+        # df2.loc[0,['Floor','NAME']] = [100,'Python']
 if __name__ == "__main__":
     app = App()
     app.mainloop()
