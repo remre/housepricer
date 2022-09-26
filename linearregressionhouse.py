@@ -136,8 +136,11 @@ y =df3[['Rent']].values
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 model = LinearRegression()
-LinearRegression_test = test_predict(model, X_train,X_test,y_train,y_test)
-# print(LinearRegression_test)
+# LinearRegression_test = test_predict(model, X_train,X_test,y_train,y_test)
+model.fit(X_train, y_train)
+prediction_test = model.predict(X_test)
+
+# print(prediction_test[:1],y_test[:1])
 
 
 

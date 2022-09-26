@@ -17,9 +17,11 @@ from datetime import datetime
 import tkinter as tk
 from tkinter import EXTENDED, MULTIPLE, SINGLE,  ttk, Label, Entry, Listbox, Scrollbar
 from tkinter.messagebox import YES
+from tkinter.tix import COLUMN
 from tokenize import Single
 from turtle import width
-from linearregressionhouse import df2
+from linearregressionhouse import df2, Scaler, one_hot_encode, convertto_int, model,df3
+import pandas as pd
 
 
 class App(tk.Tk):
@@ -27,7 +29,7 @@ class App(tk.Tk):
         super().__init__()
         # self.root = Tk()
         self.title('House Price Prediction Tool')
-        self.geometry("600x200")
+        self.geometry("800x400")
 
         self.name_var = tk.StringVar()
         # self.floor_number = Listbox(self,width=5,height=5,selectmode=SINGLE,exportselection=0)
@@ -170,7 +172,7 @@ class App(tk.Tk):
 
         pointocontacttitle.grid(column=9,row=0,**padding)
         self.point_o_contact.grid(column=9,row=1,**padding)
-        self.point_o_contact.current(0)
+        self.point_o_contact.current()
 
 
 
@@ -210,25 +212,47 @@ class App(tk.Tk):
     def submit(self):
         # for i in self.floor_number.curselection():
         answer_set = {
-                        'Tenant Preferred': self.preftenat.get(),
-                        'BHK': self.bedroom_number.get(),
-                        'floor level': self.floor_number.get(),
-                        'Area Type': self.areatypes.get(),
-                        'City': self.city.get(),
-                        'Furnishing Status': self.furnishes.get(),
-                        'Bathroom':self.bathroom.get(),
-                        'Size' :round(df2.loc[df2['Bathroom']==round(df2['Bathroom'].mean())]['Size'].mean()),
-                        'total floor' :round(df2['total floor'].mean()),
-                        'year' : datetime.now().year,
-                        'month': datetime.now().month
+                        'floor level': [self.floor_number.get()],
+                        'BHK': [self.bedroom_number.get()],
+                        'Area Type': [self.areatypes.get()],
+                        'City': [self.city.get()],
+                        'Furnishing Status': [self.furnishes.get()],
+                        'Tenant Preferred': [self.preftenat.get()],
+                        'Bathroom':[self.bathroom.get()],
+                        'Point of Contact' : [self.point_o_contact.get()],
+                        'Size' :[round(df2.loc[df2['Bathroom']==round(df2['Bathroom'].mean())]['Size'].mean())],
+                        'total floor' : [round(df2['total floor'].mean())],
+                        'year' : [datetime.now().year],
+                        'month':[datetime.now().month]
         }
+        dff = pd.DataFrame.from_dict(answer_set)
+        tonum_cols = [ 'BHK','floor level','year','month','Bathroom']
+        
+        convertto_int(dff,tonum_cols)
+        # print(dff.info())
+        columnss = list(dff.select_dtypes(include='object').columns)
+        for nom in columnss:
 
-        # for i in answer_set:
-        self.output_label.config(text=answer_set.values())
-        rent = 500
+            dff = one_hot_encode(dff,nom)
 
-        self.output_label.config(text=f'You choose these features {answer_set.items()} and the Rent is \n {rent}')
-        print(df2.columns)
+        Scaler(dff)
+        
+        lack_list = list(df3.columns.difference(dff.columns))
+        lack_list.remove('Rent')
+        for i in lack_list:
+            dff[i] = 0
+        print(dff.head())
+        print(f'df3 columns \n{df3.columns}')
+
+        # print(dff.columns.difference(df2.columns))
+        result = model.predict(dff)
+        # print(result)
+
+        # for i in answer_set
+
+
+        self.output_label.config(text=f'You choose these features {list(answer_set.values())} and the Rent is \n {result}')
+        # print(df2.columns)
         # df2.loc[0,['Floor','NAME']] = [100,'Python']
 if __name__ == "__main__":
     app = App()
