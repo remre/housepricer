@@ -232,16 +232,18 @@ class App(tk.Tk):
         convertto_int(dff,tonum_cols)
         # print(dff.info())
         columnss = list(dff.select_dtypes(include='object').columns)
+        
         for nom in columnss:
 
             dff = one_hot_encode(dff,nom)
 
-        Scaler(dff)
+        
         
         lack_list = list(df3.columns.difference(dff.columns))
         lack_list.remove('Rent')
         for i in lack_list:
             dff[i] = 0
+        Scaler(dff)
         # print(dff.head())
         # print(f'df3 columns \n{df3.columns}')
 
