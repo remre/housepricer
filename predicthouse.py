@@ -20,7 +20,7 @@ from tkinter.messagebox import YES
 from tkinter.tix import COLUMN
 from tokenize import Single
 from turtle import width
-from linearregressionhouse import df2, Scaler, one_hot_encode, convertto_int, model,df3
+from linearregressionhouse import df2, Scaler, one_hot_encode, convertto_int, model,df3, X_train,y_train
 import pandas as pd
 
 
@@ -172,7 +172,7 @@ class App(tk.Tk):
 
         pointocontacttitle.grid(column=9,row=0,**padding)
         self.point_o_contact.grid(column=9,row=1,**padding)
-        self.point_o_contact.current()
+        self.point_o_contact.current(0)
 
 
 
@@ -225,7 +225,8 @@ class App(tk.Tk):
                         'year' : [datetime.now().year],
                         'month':[datetime.now().month]
         }
-        dff = pd.DataFrame.from_dict(answer_set)
+        df = pd.DataFrame.from_dict(answer_set)
+        dff = df.copy()
         tonum_cols = [ 'BHK','floor level','year','month','Bathroom']
         
         convertto_int(dff,tonum_cols)
@@ -241,17 +242,18 @@ class App(tk.Tk):
         lack_list.remove('Rent')
         for i in lack_list:
             dff[i] = 0
-        print(dff.head())
-        print(f'df3 columns \n{df3.columns}')
+        # print(dff.head())
+        # print(f'df3 columns \n{df3.columns}')
 
         # print(dff.columns.difference(df2.columns))
+        model.fit(X_train,y_train)
         result = model.predict(dff)
         # print(result)
 
         # for i in answer_set
 
 
-        self.output_label.config(text=f'You choose these features {list(answer_set.values())} and the Rent is \n {result}')
+        self.output_label.config(text=f'You choose these features \n{df.head()}\n and the Rent is \n {result}')
         # print(df2.columns)
         # df2.loc[0,['Floor','NAME']] = [100,'Python']
 if __name__ == "__main__":
