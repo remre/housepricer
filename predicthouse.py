@@ -18,7 +18,7 @@ from tkinter import EXTENDED, MULTIPLE, SINGLE,  ttk, Label, Entry, Listbox, Scr
 from tkinter.messagebox import YES
 from tokenize import Single
 from turtle import width
-from linearregressionhouse import df2, buttonact
+from linearregressionhouse import df2
 
 
 class App(tk.Tk):
@@ -157,7 +157,7 @@ class App(tk.Tk):
         
         # for i in range(len(bathroom_number)):
         #     bathroom.insert(i,f'{bathroom_number[i]}')
-
+        
         bathroomtitle.grid(column=8,row=0,**padding)
         self.bathroom.grid(column=8,row=1,**padding)
         self.bathroom.current(0)
@@ -172,50 +172,53 @@ class App(tk.Tk):
 
         
         # Button
-        self.graph = Listbox(self,width=10,selectmode=SINGLE)
-        for col in range(len(df2.columns)):
+        # self.graph = Listbox(self,width=10,selectmode=SINGLE)
+        # for col in range(len(df2.columns)):
 
-            self.graph.insert(col,f'{df2.columns[col]}')
+        #     self.graph.insert(col,f'{df2.columns[col]}')
         
-        graphtitle = Label(text='Choose the feature you want to see in graph')
-        graphtitle.grid(column=9,row=0)
-        self.graph.grid(column=9,row=1)
-        def selected_item():
-            for i in self.graph.curselection():
-                # submit_button.config(command=buttonact(self.graph.get(i)))
-                a = ttk.Label(text=f'this is the text {self.graph.get(i)}')
-                a.grid(column=11,row=1)
-                return  self.graph.get(i)
-        x_value = selected_item()
+        # graphtitle = Label(text='Choose the feature you want to see in graph')
+        # graphtitle.grid(column=9,row=0)
+        # self.graph.grid(column=9,row=1)
+        # def selected_item():
+        #     for i in self.graph.curselection():
+        #         # submit_button.config(command=buttonact(self.graph.get(i)))
+        #         a = ttk.Label(text=f'this is the text {self.graph.get(i)}')
+        #         a.grid(column=11,row=1)
+        #         return  self.graph.get(i)
+        # x_value = selected_item()
             #    self.graph.get(i)
         # print(selected_item())
-        submit_button = ttk.Button(self, text='Graph',command=buttonact(x_value))
-        submit_button.grid(column=10, row=1, **padding)
+        # submit_button = ttk.Button(self, text='Graph',command=selected_item)
+        # submit_button.grid(column=10, row=1, **padding)
         # Output label
         rent = 500
         self.output_label = ttk.Label(self,text='Select features above and see the predicted rent that you gonna pay!!')
         self.output_label.grid(column=0, row=9, columnspan=15,rowspan=5, **padding)
+        submit_button = ttk.Button(self, text='Graph',command=self.submit)
+        submit_button.grid(column=10, row=1, **padding)
 
 
 
     def submit(self):
         # for i in self.floor_number.curselection():
-            answer_set = {
-                            'Tenant Preferred': self.preftenat.get(),
-                            'Number of Bedrooms': self.bedroom_number.get(),
-                            'Floor': self.floor_number.get(),
-                            'Area Type': self.areatypes.get(),
-                            'City': self.city.get(),
-                            'Furnishes': self.furnishes.get(),
-                            'Bathrooms':self.bathroom.get()
-            }
+        answer_set = {
+                        'Tenant Preferred': self.preftenat.get(),
+                        'Number of Bedrooms': self.bedroom_number.get(),
+                        'Floor': self.floor_number.get(),
+                        'Area Type': self.areatypes.get(),
+                        'City': self.city.get(),
+                        'Furnishes': self.furnishes.get(),
+                        'Bathrooms':self.bathroom.get()
+        }
 
-            # for i in answer_set:
-            # self.output_label.config(text=answer_set.values())
-            rent = 500
-            self.output_label.config(text=f'You choose these features {answer_set.values()}and the Rent is \n {rent}')
+        # for i in answer_set:
+        self.output_label.config(text=answer_set.values())
+        rent = 500
 
+        self.output_label.config(text=f'You choose these features {answer_set.values()}and the Rent is \n {rent}')
 
+        
 if __name__ == "__main__":
     app = App()
     app.mainloop()
