@@ -18,7 +18,7 @@ from tkinter import EXTENDED, MULTIPLE, SINGLE,  ttk, Label, Entry, Listbox, Scr
 from tkinter.messagebox import YES
 from tokenize import Single
 from turtle import width
-from linearregressionhouse import df2
+from linearregressionhouse import df2, buttonact
 
 
 class App(tk.Tk):
@@ -172,9 +172,25 @@ class App(tk.Tk):
 
         
         # Button
-        submit_button = ttk.Button(self, text='Submit', command=self.submit)
-        submit_button.grid(column=9, row=1, **padding)
+        self.graph = Listbox(self,width=10,selectmode=SINGLE)
+        for col in range(len(df2.columns)):
 
+            self.graph.insert(col,f'{df2.columns[col]}')
+        
+        graphtitle = Label(text='Choose the feature you want to see in graph')
+        graphtitle.grid(column=9,row=0)
+        self.graph.grid(column=9,row=1)
+        def selected_item():
+            for i in self.graph.curselection():
+                # submit_button.config(command=buttonact(self.graph.get(i)))
+                a = ttk.Label(text=f'this is the text {self.graph.get(i)}')
+                a.grid(column=11,row=1)
+                return  self.graph.get(i)
+        x_value = selected_item()
+            #    self.graph.get(i)
+        # print(selected_item())
+        submit_button = ttk.Button(self, text='Graph',command=buttonact(x_value))
+        submit_button.grid(column=10, row=1, **padding)
         # Output label
         rent = 500
         self.output_label = ttk.Label(self,text='Select features above and see the predicted rent that you gonna pay!!')
