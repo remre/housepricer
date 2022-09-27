@@ -244,8 +244,8 @@ class App(tk.Tk):
         for i in lack_list:
             dff[i] = 0
         Scaler(dff)
-        # print(dff.head())
-        # print(f'df3 columns \n{df3.columns}')
+        print(dff.head())
+        print(f'df3 columns \n{df3.columns}')
 
         # print(dff.columns.difference(df2.columns))
         model.fit(X_train,y_train)

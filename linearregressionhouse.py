@@ -39,19 +39,6 @@ df =pd.read_csv('C:/Users/emreb/Documents/projects/houserentpre/dts/House_Rent_D
 
 # Seperate day month and year
 
-df['Posted On'] = pd.to_datetime(df['Posted On'])
-df['month'] = df['Posted On'].dt.month
-df['year'] = df['Posted On'].dt.year
-df2=df.copy()
-
-# Seperate floor level and total floor and drop Floor column
-
-df2 = df2.join(df['Floor'].str.split(' out of ', 1, expand=True).rename(columns={0:'floor level', 1:'total floor'}))
-df2['floor level'] = df2.apply(lambda x: 0 if x['floor level'] =='Ground' \
-                               else ( -2 if x['floor level'] =='Lower Basement' else -1 if x['floor level'] =='Upper Basement' else (x['floor level']) ) , axis=1)
-# print("Status: Changed 'Ground'=0, 'Lower Basement'=-1, Rest = total floor")
-
-df2.drop('Floor',axis=1,inplace=True)
 
 def convertto_int(df,columns):
     for col in columns:
@@ -59,21 +46,9 @@ def convertto_int(df,columns):
         
     # return df
     
-tonum_cols = ['floor level'], ['total floor']
-df2.dropna(inplace=True)
-convertto_int(df2,tonum_cols)
-# df2['City'].unique()
-# print(df['City'].unique())
 
-df2= df2[~df2['Point of Contact'].str.contains("Contact Builder")]
-df2 = df2[~df2['Area Type'].str.contains("Built Area")]
-df2 = df2[df2.Rent < 3400000]
 
-orcat_vars  = [ 'total floor', 'Area Type', 'Area Locality', 'Furnishing Status', 'Tenant Preferred'] 
-nomcat_vars  = ['City', 'Point of Contact']
-num_vars = ['BHK','Size','floor level','total floor','Bathroom','month','year']
-cate_vars  = ['Furnishing Status', 'Tenant Preferred','Point of Contact','City','Area Type']
-coltodrop = ['Area Locality', 'Posted On']
+
 
 def one_hot_encode(df, column):
     # Get one hot encoding of columns B
@@ -84,11 +59,13 @@ def one_hot_encode(df, column):
     # Join the encoded df
     df = df.join(one_hot)
     return df
+
 def drop_unnecs(df,columns):
     for col in columns:
 
         df.drop(col,axis=1,inplace=True)
     return df
+    
 def test_predict(model,X_train,X_test,y_train,y_test, parameters = None):
     model.fit(X_train, y_train)
     prediction_test = model.predict(X_test)
@@ -112,16 +89,6 @@ def test_predict(model,X_train,X_test,y_train,y_test, parameters = None):
     d = {'model':model_text_list, 'parameters': param_list ,'metric': metric_list, 'test predict score': score_list}
     df = pd.DataFrame(data=d)
     return df
-
-
-df3 = df2.copy()
-drop_unnecs(df3,coltodrop)
-for nom in cate_vars:
-
-    df3 = one_hot_encode(df3,nom)
-
-
-
 def Scaler(df):
 
 
@@ -129,6 +96,48 @@ def Scaler(df):
 
     scaler = StandardScaler()
     df[numerical_features] = scaler.fit_transform(df[numerical_features])
+
+
+
+df['Posted On'] = pd.to_datetime(df['Posted On'])
+df['month'] = df['Posted On'].dt.month
+df['year'] = df['Posted On'].dt.year
+df2=df.copy()
+
+# Seperate floor level and total floor and drop Floor column
+
+df2 = df2.join(df['Floor'].str.split(' out of ', 1, expand=True).rename(columns={0:'floor level', 1:'total floor'}))
+df2['floor level'] = df2.apply(lambda x: 0 if x['floor level'] =='Ground' \
+                               else ( -2 if x['floor level'] =='Lower Basement' else -1 if x['floor level'] =='Upper Basement' else (x['floor level']) ) , axis=1)
+# print("Status: Changed 'Ground'=0, 'Lower Basement'=-1, Rest = total floor")
+
+
+df2= df2[~df2['Point of Contact'].str.contains("Contact Builder")]
+df2 = df2[~df2['Area Type'].str.contains("Built Area")]
+df2 = df2[df2.Rent < 3400000]
+
+tonum_cols = ['floor level'], ['total floor']
+orcat_vars  = [ 'total floor', 'Area Type', 'Area Locality', 'Furnishing Status', 'Tenant Preferred'] 
+nomcat_vars  = ['City', 'Point of Contact']
+num_vars = ['BHK','Size','floor level','total floor','Bathroom','month','year']
+cate_vars  = ['Furnishing Status', 'Tenant Preferred','Point of Contact','City','Area Type']
+coltodrop = ['Area Locality', 'Posted On','Floor']
+
+
+df2.dropna(inplace=True)
+convertto_int(df2,tonum_cols)
+
+df3 = df2.copy()
+
+
+drop_unnecs(df3,coltodrop)
+for nom in cate_vars:
+
+    df3 = one_hot_encode(df3,nom)
+
+
+
+
 Scaler(df3)
 
 X = df3.drop('Rent',axis=1)
@@ -136,10 +145,10 @@ y =df3[['Rent']].values
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 model = LinearRegression()
-# LinearRegression_test = test_predict(model, X_train,X_test,y_train,y_test)
-model.fit(X_train, y_train)
-prediction_test = model.predict(X_test)
-
+LinearRegression_test = test_predict(model, X_train,X_test,y_train,y_test)
+print(LinearRegression_test)
+# model.fit(X_train, y_train)
+# prediction_test = model.predict(X_test)
 # print(prediction_test[:1],y_test[:1])
 
 
