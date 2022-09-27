@@ -1,38 +1,10 @@
 import pandas as pd 
-from typing import Callable
-
-from matplotlib.backend_bases import key_press_handler
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.figure import Figure
-
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.linear_model import LinearRegression, Lasso
+from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.linear_model import LinearRegression, BayesianRidge
-from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error , mean_squared_log_error
-from sklearn.feature_selection import SelectFromModel
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.tree import DecisionTreeRegressor
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from sklearn.preprocessing import StandardScaler
-from sklearn.experimental import enable_halving_search_cv
-from sklearn.model_selection import HalvingGridSearchCV
-from sklearn.ensemble import BaggingRegressor
-from sklearn.ensemble import VotingRegressor
-from sklearn.ensemble import StackingRegressor
-from sklearn import tree
-from sklearn.tree          import DecisionTreeRegressor
-from sklearn.ensemble      import RandomForestRegressor
-from sklearn.ensemble      import ExtraTreesRegressor
-from sklearn.ensemble      import AdaBoostRegressor
-from sklearn.ensemble      import GradientBoostingRegressor
-from sklearn import pipeline      # Pipeline
-from sklearn import impute
-import time
-from sklearn import metrics   
-from sklearn import compose
+
+
 
 # call the dataframe
 df =pd.read_csv('C:/Users/emreb/Documents/projects/houserentpre/dts/House_Rent_Dataset.csv')
@@ -146,7 +118,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
 model = LinearRegression()
 LinearRegression_test = test_predict(model, X_train,X_test,y_train,y_test)
-print(LinearRegression_test)
+# print(LinearRegression_test)
 # model.fit(X_train, y_train)
 # prediction_test = model.predict(X_test)
 # print(prediction_test[:1],y_test[:1])

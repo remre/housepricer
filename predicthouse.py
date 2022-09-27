@@ -203,7 +203,7 @@ class App(tk.Tk):
         # Output label
         rent = 500
         self.output_label = ttk.Label(self,text='Select features above and see the predicted rent that you gonna pay!!')
-        self.output_label.grid(column=0, row=10, columnspan=15,rowspan=5, **padding)
+        self.output_label.grid(column=1, row=3, columnspan=15,rowspan=5, **padding)
         submit_button = ttk.Button(self, text='Submit',command=self.submit)
         submit_button.grid(column=11, row=1, **padding)
 
@@ -238,24 +238,23 @@ class App(tk.Tk):
             dff = one_hot_encode(dff,nom)
 
         
-        
         lack_list = list(df3.columns.difference(dff.columns))
         lack_list.remove('Rent')
         for i in lack_list:
             dff[i] = 0
         Scaler(dff)
-        print(dff.head())
+        print(dff.columns)
         print(f'df3 columns \n{df3.columns}')
 
         # print(dff.columns.difference(df2.columns))
-        model.fit(X_train,y_train)
+        # model.fit(X_train,y_train)
         result = model.predict(dff)
         # print(result)
 
         # for i in answer_set
 
 
-        self.output_label.config(text=f'You choose these features \n{df.head()}\n and the Rent is \n {result}')
+        self.output_label.config(text=f'You choose these features \n{df.head()}\n and the Rent is \n {model.predict(dff)}')
         # print(df2.columns)
         # df2.loc[0,['Floor','NAME']] = [100,'Python']
 if __name__ == "__main__":
