@@ -61,13 +61,13 @@ def test_predict(model,X_train,X_test,y_train,y_test, parameters = None):
     d = {'model':model_text_list, 'parameters': param_list ,'metric': metric_list, 'test predict score': score_list}
     df = pd.DataFrame(data=d)
     return df
-def Scaler(df):
+# def Scaler(df):
 
 
-    numerical_features = df.dtypes[df.dtypes != "object"].index
+# numerical_features = df.dtypes[df.dtypes != "object"].index
 
-    scaler = StandardScaler()
-    df[numerical_features] = scaler.fit_transform(df[numerical_features])
+# scaler = StandardScaler()
+# df[numerical_features] = scaler.fit_transform(df[numerical_features])
 
 
 
@@ -107,10 +107,11 @@ for nom in cate_vars:
 
     df3 = one_hot_encode(df3,nom)
 
+numerical_features = df3.dtypes[df3.dtypes != "object"].index
+scaler = StandardScaler()
+df3[numerical_features] = scaler.fit_transform(df3[numerical_features])
 
-
-
-Scaler(df3)
+# Scaler(df3)
 
 X = df3.drop('Rent',axis=1)
 y =df3[['Rent']].values
@@ -118,7 +119,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
 model = LinearRegression()
 LinearRegression_test = test_predict(model, X_train,X_test,y_train,y_test)
-# print(LinearRegression_test)
+print(LinearRegression_test)
 # model.fit(X_train, y_train)
 # prediction_test = model.predict(X_test)
 # print(prediction_test[:1],y_test[:1])

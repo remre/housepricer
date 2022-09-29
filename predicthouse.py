@@ -20,9 +20,9 @@ from tkinter.messagebox import YES
 from tkinter.tix import COLUMN
 from tokenize import Single
 from turtle import width
-from linearregressionhouse import df2, Scaler, one_hot_encode, convertto_int, model,df3, X_train,y_train
+from linearregressionhouse import df2, one_hot_encode, convertto_int, model,df3, X_train,y_train,y_test
 import pandas as pd
-
+from sklearn.preprocessing import StandardScaler
 
 class App(tk.Tk):
     def __init__(self):
@@ -232,29 +232,33 @@ class App(tk.Tk):
         convertto_int(dff,tonum_cols)
         # print(dff.info())
         columnss = list(dff.select_dtypes(include='object').columns)
-        
+        scaler = StandardScaler()
+       
         for nom in columnss:
 
             dff = one_hot_encode(dff,nom)
 
-        
+        numerical_features = df.dtypes[df.dtypes != "object"].index
+        dff[numerical_features] = scaler.fit_transform(dff[numerical_features])
         lack_list = list(df3.columns.difference(dff.columns))
         lack_list.remove('Rent')
         for i in lack_list:
             dff[i] = 0
-        Scaler(dff)
-        print(dff.columns)
-        print(f'df3 columns \n{df3.columns}')
+        
+
+        
+        # print(dff.columns)
+        # print(f'df3 columns \n{df3.columns}')
 
         # print(dff.columns.difference(df2.columns))
-        # model.fit(X_train,y_train)
+        model.fit(X_train,y_train)
         result = model.predict(dff)
         # print(result)
-
+        # result = scaler.inverse_transform(result)
         # for i in answer_set
 
 
-        self.output_label.config(text=f'You choose these features \n{df.head()}\n and the Rent is \n {model.predict(dff)}')
+        self.output_label.config(text=f'You choose these features \n{df.head()}\n and the Rent is \n {result}')
         # print(df2.columns)
         # df2.loc[0,['Floor','NAME']] = [100,'Python']
 if __name__ == "__main__":
